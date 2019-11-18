@@ -1,17 +1,13 @@
 package com.lakooz.lpctest.database
 
 import androidx.room.TypeConverter
-import java.util.Date
+import java.util.*
 
 class DateConverter {
 
     @TypeConverter
-    fun fromTimestamp(mills: Long?): Date? {
-       // TODO
-    }
+    fun fromTimestamp(value: Long): Date = Date(value)
 
     @TypeConverter
-    fun fromDate(date: Date?)  {
-        // TODO
-    }
+    fun fromDate(date: Date): Long = date.time
 }
