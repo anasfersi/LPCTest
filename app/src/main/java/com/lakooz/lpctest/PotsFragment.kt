@@ -1,6 +1,8 @@
 package com.lakooz.lpctest
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,8 +11,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lakooz.lpctest.databinding.PotsFragmentBinding
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.pots_fragment.*
 
-class PotsFragment : Fragment() {
+class PotsFragment: Fragment() {
+
+    lateinit var viewModel: PotsViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -21,11 +27,25 @@ class PotsFragment : Fragment() {
 
         val binding = PotsFragmentBinding.inflate(inflater, container, false)
 
-       // set up recycler view
 
-
-      // TODO : set up view model
+        viewModel.pots.observe(this, Observer {
+            (recycler_view.adapter as PotAdapter).setPots(it)
+        })
 
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        recycler_view.adapter = PotAdapter(context!!, layout_no_item)
+        recycler_view.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        viewModel = ViewModelProviders.of(this).get(PotsViewModel::class.java)
+        viewModel.category = (activity as MainActivity).viewPager2.currentItem
     }
 }

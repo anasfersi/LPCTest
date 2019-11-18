@@ -1,6 +1,7 @@
 package com.lakooz.lpctest
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,6 +12,9 @@ import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import java.io.PrintWriter
+import java.io.StringWriter
+
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -19,7 +23,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val _isRefreshing = MutableLiveData<Boolean>()
     val isRefreshing: LiveData<Boolean>
         get() = _isRefreshing
-
 
     fun getPots() {
 
@@ -36,12 +39,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
                 override fun onSuccess(pots: List<Pot>) {
                     disposable?.dispose()
-                    // TODO
-
+                    repository.insertAllAndSynchronize(pots)
+                    _isRefreshing.value = false
                 }
 
                 override fun onError(e: Throwable) {
-                    // TODO
+                    _isRefreshing.value = false
                 }
 
             }
@@ -55,20 +58,16 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : SingleObserver<Pot> {
-
                 var disposable: Disposable? = null
-
                 override fun onSubscribe(d: Disposable) {
                     disposable = d
                 }
-
                 override fun onSuccess(pot: Pot) {
                     disposable?.dispose()
-                    //TODO
+                    repository.createOrUpdate(pot)
                 }
-
                 override fun onError(e: Throwable) {
-                    //TODO
+                    e.printStackTrace(PrintWriter(StringWriter()))
                 }
 
             }

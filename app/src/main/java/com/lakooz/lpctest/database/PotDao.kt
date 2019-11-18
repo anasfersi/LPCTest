@@ -13,7 +13,7 @@ abstract class PotDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun createOrUpdate(pot: Pot)
 
-    @Query("SELECT * FROM Pot WHERE category = :value")
+    @Query("SELECT * FROM Pot WHERE category == :value")
     abstract fun getPots(value: Int): List<Pot>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

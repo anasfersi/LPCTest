@@ -1,46 +1,61 @@
 package com.lakooz.lpctest
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.android.synthetic.main.activity_main.*
+
 
 class MainActivity : AppCompatActivity() {
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // TODO : set content view and declare views
+        setContentView(R.layout.activity_main)
 
-
-        viewPager.adapter = ViewPagerAdapter(supportFragmentManager, lifecycle)
+        viewPager2.adapter = ViewPagerAdapter(supportFragmentManager, lifecycle)
 
         setSupportActionBar(toolbar)
 
-        TabLayoutMediator(tabLayout, viewPager,
+        TabLayoutMediator(tab_layout, viewPager2,
             TabLayoutMediator.TabConfigurationStrategy { tab, position ->
-                // TODO : set tabs titles
+                tab.text = when (position) {
+                    0 -> "Anniversaire"
+                    1 -> "Départ"
+                    2 -> "Solidaire"
+                    else -> "Anniversaire"
+                }
             }).attach()
 
 
-       swipeRefreshLayout.setProgressViewOffset(true, START_SWIPE_REFRESH, resources.getDimension(R.dimen.swipe_refresh_offset).toInt())
+        swipe_refresh_layout.setProgressViewOffset(
+            true,
+            START_SWIPE_REFRESH,
+            resources.getDimension(R.dimen.swipe_refresh_offset).toInt()
+        )
 
-        // TODO : set up view model
+        val viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+        viewModel.isRefreshing.observe(this, Observer {
+            swipe_refresh_layout.isRefreshing = it
+        })
 
 
-
-        swipeRefreshLayout.setOnRefreshListener {
-            // TODO
+        swipe_refresh_layout.setOnRefreshListener {
+            viewModel.getPots()
         }
 
-        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+        viewPager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageScrollStateChanged(state: Int) {
                 val viewPagerIdle = state == ViewPager2.SCROLL_STATE_IDLE
-                swipeRefreshLayout.isEnabled = viewPagerIdle
+                swipe_refresh_layout.isEnabled = viewPagerIdle
             }
         })
 
         fab.setOnClickListener {
-            // TODO
+            viewModel.createPot(viewPager2.currentItem)
         }
     }
 

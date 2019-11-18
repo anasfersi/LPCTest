@@ -6,8 +6,8 @@ import java.util.*
 class DateConverter {
 
     @TypeConverter
-    fun fromTimestamp(value: Long): Date = Date(value)
+    fun fromTimestamp(mills: Long?): Date? = if (mills != null) Date(mills) else null
 
     @TypeConverter
-    fun fromDate(date: Date): Long = date.time
+    fun fromDate(date: Date?): Long? = date?.time
 }
