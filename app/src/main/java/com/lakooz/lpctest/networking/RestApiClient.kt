@@ -40,6 +40,7 @@ object RestApiClient {
         }
     }
 
+
     fun getPots(): Single<List<Pot>> {
         return Instance.invoke().getPots()
     }

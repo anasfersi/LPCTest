@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.lakooz.lpctest.model.Pot
 
-@Database(entities = [Pot::class], version = 1, exportSchema = false)
+@Database(entities = [Pot::class], version = 2, exportSchema = false)
 @TypeConverters(DateConverter::class)
 abstract class AppDatabase : RoomDatabase() {
 

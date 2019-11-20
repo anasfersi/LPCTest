@@ -17,9 +17,9 @@ class PotsViewModel : ViewModel() {
         var tmp: List<Pot> = listOf()
         thread {
             tmp = repository.getPots(category)
-            Log.e("List",tmp.toString())
         }
         value = tmp
+        Log.e("List value",value.toString())
     }
 
 }

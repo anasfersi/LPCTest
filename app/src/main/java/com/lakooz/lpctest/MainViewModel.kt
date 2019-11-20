@@ -25,7 +25,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         get() = _isRefreshing
 
     fun getPots() {
-
         RestApiClient.getPots()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -42,11 +41,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     repository.insertAllAndSynchronize(pots)
                     _isRefreshing.value = false
                 }
-
                 override fun onError(e: Throwable) {
                     _isRefreshing.value = false
                 }
-
             }
 
             )

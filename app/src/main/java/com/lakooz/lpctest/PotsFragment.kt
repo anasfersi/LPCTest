@@ -14,7 +14,7 @@ import com.lakooz.lpctest.databinding.PotsFragmentBinding
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.pots_fragment.*
 
-class PotsFragment: Fragment() {
+class PotsFragment : Fragment() {
 
     lateinit var viewModel: PotsViewModel
 
@@ -27,13 +27,15 @@ class PotsFragment: Fragment() {
 
         val binding = PotsFragmentBinding.inflate(inflater, container, false)
 
-
-        viewModel.pots.observe(this, Observer {
+        this.viewModel.pots.observe(this, Observer {
             (recycler_view.adapter as PotAdapter).setPots(it)
+            Log.e("OBSERVER : ",it.toString())
         })
-
         return binding.root
     }
+
+
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -45,7 +47,7 @@ class PotsFragment: Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        viewModel = ViewModelProviders.of(this).get(PotsViewModel::class.java)
-        viewModel.category = (activity as MainActivity).viewPager2.currentItem
+        this.viewModel = ViewModelProviders.of(this).get(PotsViewModel::class.java)
+        this.viewModel.category = (activity as MainActivity).viewPager2.currentItem
     }
 }
